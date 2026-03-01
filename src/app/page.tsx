@@ -1,11 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
-import { formatDateTime } from "@/lib/format";
-import { getSiteSettings } from "@/lib/data";
+import { formatDate, formatDateTime } from "@/lib/format";
+import { getSiteSettings, listStudies } from "@/lib/data";
 import { getNextGoogleCalendarEvent } from "@/lib/google-calendar";
 
 export default async function HomePage() {
-  const [settings, nextCalendarEvent] = await Promise.all([getSiteSettings(), getNextGoogleCalendarEvent()]);
+  const [settings, nextCalendarEvent, studies] = await Promise.all([
+    getSiteSettings(),
+    getNextGoogleCalendarEvent(),
+    listStudies({}),
+  ]);
+  const latestStudies = studies.slice(0, 3);
 
   const nextMeeting = nextCalendarEvent
     ? {
@@ -55,10 +60,21 @@ export default async function HomePage() {
           </article>
 
           <article className="card stack">
-            <p className="eyebrow">Latest Studies</p>
-            <p>Browse archived notes from Kurt&apos;s Bible studies with verse quick-lookup.</p>
+            <p className="eyebrow">Kurt&apos;s Latest Studies</p>
+            <div className="latest-studies-list">
+              {latestStudies.length === 0 ? <p>No studies posted yet.</p> : null}
+              {latestStudies.map((study) => (
+                <article key={study.id} className="latest-study-item">
+                  <p className="latest-study-line">
+                    <Link href={`/studies/${study.slug}`}>{study.title}</Link>
+                    <span> - {study.summary}</span>
+                  </p>
+                  <p className="latest-study-date">{formatDate(study.studyDate)}</p>
+                </article>
+              ))}
+            </div>
             <Link href="/studies" className="button-primary">
-              Explore Studies
+              Explore Study Archive
             </Link>
           </article>
 

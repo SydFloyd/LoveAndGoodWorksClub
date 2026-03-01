@@ -7,6 +7,8 @@ export type Study = {
   id: number;
   slug: string;
   title: string;
+  summary: string;
+  studyDate: Date;
   bodyMd: string;
   createdAt: Date;
   updatedAt: Date;

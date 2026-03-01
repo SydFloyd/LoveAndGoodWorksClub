@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { createStudyAction, restoreStudyAction, softDeleteStudyAction } from "@/app/admin/actions";
-import { formatDate } from "@/lib/format";
+import { formatDate, formatDateInputValue } from "@/lib/format";
 import { listStudies, listTrashedStudies } from "@/lib/data";
 
 type AdminStudiesPageProps = {
@@ -16,13 +16,17 @@ type AdminStudiesPageProps = {
 export default async function AdminStudiesPage({ searchParams }: AdminStudiesPageProps) {
   const params = await searchParams;
   const [studies, trashedStudies] = await Promise.all([listStudies({}), listTrashedStudies()]);
+  const defaultStudyDate = formatDateInputValue(new Date());
 
   return (
     <>
       <section className="hero stack">
         <p className="eyebrow">Admin / Studies</p>
         <h2>Create Study Notes</h2>
-        <p>This editor stores title and markdown body. Markdown supports bold, italics, headers, and bullets.</p>
+        <p>
+          This editor stores title, summary, study date, and markdown body. Markdown supports bold, italics,
+          headers, and bullets.
+        </p>
       </section>
 
       {params.created ? <p className="status success">Study created successfully.</p> : null}
@@ -33,9 +37,21 @@ export default async function AdminStudiesPage({ searchParams }: AdminStudiesPag
 
       <section className="card">
         <form className="stack" action={createStudyAction}>
+          <div className="study-title-date-row">
+            <label className="study-title-inline">
+              Title
+              <input type="text" name="title" required maxLength={200} />
+            </label>
+
+            <label className="study-date-inline">
+              Study Date
+              <input type="date" name="studyDate" required defaultValue={defaultStudyDate} />
+            </label>
+          </div>
+
           <label>
-            Title
-            <input type="text" name="title" required maxLength={200} />
+            Summary
+            <input type="text" name="summary" required minLength={8} maxLength={320} />
           </label>
 
           <label>
@@ -62,8 +78,10 @@ export default async function AdminStudiesPage({ searchParams }: AdminStudiesPag
         {studies.map((study) => (
           <article key={study.id} className="stack">
             <h4>{study.title}</h4>
+            <p>{study.summary}</p>
             <div className="meta-row">
-              <span>{formatDate(study.createdAt)}</span>
+              <span>Study Date: {formatDate(study.studyDate)}</span>
+              <span>Updated: {formatDate(study.updatedAt)}</span>
               <span>{study.slug}</span>
             </div>
             <div className="meta-row">

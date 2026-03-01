@@ -9,15 +9,6 @@ type StudiesPageProps = {
   }>;
 };
 
-function stripMarkdown(markdown: string) {
-  return markdown
-    .replace(/```[\s\S]*?```/g, " ")
-    .replace(/[#>*_`~\-]/g, " ")
-    .replace(/\[(.*?)\]\((.*?)\)/g, "$1")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
 export default async function StudiesPage({ searchParams }: StudiesPageProps) {
   const params = await searchParams;
   const query = params.q?.trim() || "";
@@ -55,13 +46,13 @@ export default async function StudiesPage({ searchParams }: StudiesPageProps) {
         {studies.length === 0 ? <p>No studies found for this query.</p> : null}
         {studies.map((study) => (
           <article key={study.id} className="card stack">
-            <h3>
-              <Link href={`/studies/${study.slug}`}>{study.title}</Link>
-            </h3>
-            <div className="meta-row">
-              <span>{formatDate(study.createdAt)}</span>
+            <div className="study-list-header">
+              <h3>
+                <Link href={`/studies/${study.slug}`}>{study.title}</Link>
+              </h3>
+              <span>Study Date: {formatDate(study.studyDate)}</span>
             </div>
-            <p>{stripMarkdown(study.bodyMd).slice(0, 240)}...</p>
+            <p>{study.summary}</p>
             <Link className="button-outline" href={`/studies/${study.slug}`}>
               Read Study
             </Link>

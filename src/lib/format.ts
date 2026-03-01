@@ -20,3 +20,10 @@ export function formatDateTime(value: Date) {
 export function formatDate(value: Date) {
   return dateFormatter.format(value);
 }
+
+export function formatDateInputValue(value: Date) {
+  const year = value.getUTCFullYear();
+  const month = `${value.getUTCMonth() + 1}`.padStart(2, "0");
+  const day = `${value.getUTCDate()}`.padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}

@@ -16,6 +16,8 @@ type StudyRow = {
   id: number;
   slug: string;
   title: string;
+  summary: string;
+  study_date: Date | string;
   body_md: string;
   created_at: Date;
   updated_at: Date;
@@ -50,11 +52,41 @@ function mapSiteSettings(row: SiteSettingsRow): SiteSettings {
   };
 }
 
+function markdownPreview(markdown: string) {
+  return markdown
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/\[(.*?)\]\((.*?)\)/g, "$1")
+    .replace(/[#>*_`~\-]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 220);
+}
+
+function normalizeDate(value: Date | string): Date {
+  if (value instanceof Date) {
+    return value;
+  }
+
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    return new Date(`${value}T12:00:00Z`);
+  }
+
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) {
+    throw new Error(`Invalid date value: ${value}`);
+  }
+  return parsed;
+}
+
 function mapStudy(row: StudyRow): Study {
+  const summary = row.summary.trim() || markdownPreview(row.body_md) || "Study outline available.";
+
   return {
     id: row.id,
     slug: row.slug,
     title: row.title,
+    summary,
+    studyDate: normalizeDate(row.study_date),
     bodyMd: row.body_md,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
@@ -112,6 +144,8 @@ export async function listStudies(params: { query?: string }) {
       s.id,
       s.slug,
       s.title,
+      s.summary,
+      s.study_date,
       s.body_md,
       s.created_at,
       s.updated_at,
@@ -120,10 +154,11 @@ export async function listStudies(params: { query?: string }) {
     where (
       ${searchQuery}::text is null
       or s.title ilike '%' || ${searchQuery} || '%'
+      or s.summary ilike '%' || ${searchQuery} || '%'
       or s.body_md ilike '%' || ${searchQuery} || '%'
     )
     and s.deleted_at is null
-    order by s.created_at desc
+    order by s.study_date desc, s.created_at desc
   `;
 
   return rows.map(mapStudy);
@@ -135,6 +170,8 @@ export async function listTrashedStudies() {
       s.id,
       s.slug,
       s.title,
+      s.summary,
+      s.study_date,
       s.body_md,
       s.created_at,
       s.updated_at,
@@ -153,6 +190,8 @@ export async function getStudyBySlug(slug: string) {
       s.id,
       s.slug,
       s.title,
+      s.summary,
+      s.study_date,
       s.body_md,
       s.created_at,
       s.updated_at,
@@ -172,6 +211,8 @@ export async function getStudyById(id: number) {
       s.id,
       s.slug,
       s.title,
+      s.summary,
+      s.study_date,
       s.body_md,
       s.created_at,
       s.updated_at,
@@ -184,7 +225,7 @@ export async function getStudyById(id: number) {
   return row ? mapStudy(row) : null;
 }
 
-export async function createStudy(input: { title: string; bodyMd: string }) {
+export async function createStudy(input: { title: string; summary: string; studyDate: string; bodyMd: string }) {
   const baseSlug = slugify(input.title, { lower: true, strict: true, trim: true }) || "study";
   let slug = baseSlug;
   let suffix = 2;
@@ -204,19 +245,27 @@ export async function createStudy(input: { title: string; bodyMd: string }) {
   }
 
   const [study] = await sql<{ id: number; slug: string }[]>`
-    insert into studies (slug, title, body_md)
-    values (${slug}, ${input.title}, ${input.bodyMd})
+    insert into studies (slug, title, summary, study_date, body_md)
+    values (${slug}, ${input.title}, ${input.summary}, ${input.studyDate}::date, ${input.bodyMd})
     returning id, slug
   `;
 
   return study.slug;
 }
 
-export async function updateStudy(input: { id: number; title: string; bodyMd: string }) {
+export async function updateStudy(input: {
+  id: number;
+  title: string;
+  summary: string;
+  studyDate: string;
+  bodyMd: string;
+}) {
   await sql`
     update studies
     set
       title = ${input.title},
+      summary = ${input.summary},
+      study_date = ${input.studyDate}::date,
       body_md = ${input.bodyMd},
       updated_at = now()
     where id = ${input.id}

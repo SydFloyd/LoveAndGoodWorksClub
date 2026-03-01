@@ -161,6 +161,38 @@ textarea {
   gap: 1rem;
 }
 
+.latest-studies-list {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.latest-study-item {
+  display: grid;
+  gap: 0.2rem;
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fffaf4;
+  padding: 0.55rem 0.65rem;
+}
+
+.latest-study-line {
+  margin: 0;
+  line-height: 1.35;
+}
+
+.latest-study-line a {
+  font-weight: 700;
+}
+
+.latest-study-date {
+  margin: 0;
+  text-align: right;
+  color: var(--ink-soft);
+  font-weight: 700;
+  font-size: 0.87rem;
+}
+
 .next-meeting-card {
   gap: 0.4rem;
 }
@@ -513,6 +545,43 @@ textarea {
   font-weight: 600;
 }
 
+.study-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.8rem;
+}
+
+.study-list-header span {
+  color: var(--ink-soft);
+  font-weight: 700;
+}
+
+.study-title-date-row {
+  display: flex;
+  align-items: end;
+  gap: 0.8rem;
+}
+
+.study-title-inline {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.study-title-inline input {
+  width: 100%;
+}
+
+.study-date-inline {
+  flex: 0 0 clamp(11.5rem, 25%, 12.5rem);
+  width: clamp(11.5rem, 25%, 12.5rem);
+  margin-left: auto;
+}
+
+.study-date-inline input {
+  width: 100%;
+}
+
 .study-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 320px;
@@ -582,6 +651,13 @@ textarea {
   font-size: 0.9rem;
 }
 
+.study-updated-note {
+  margin: 0;
+  text-align: right;
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+
 .table-wrap {
   overflow-x: auto;
 }
@@ -644,6 +720,25 @@ td {
 
   .study-layout {
     grid-template-columns: 1fr;
+  }
+
+  .study-list-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .study-title-date-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .study-date-inline {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .study-date-inline input {
+    width: 100%;
   }
 
   .verse-panel {

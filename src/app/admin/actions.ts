@@ -25,6 +25,8 @@ function stringValue(formData: FormData, key: string) {
 export async function createStudyAction(formData: FormData) {
   const parsed = adminStudySchema.safeParse({
     title: stringValue(formData, "title"),
+    summary: stringValue(formData, "summary"),
+    studyDate: stringValue(formData, "studyDate"),
     bodyMd: stringValue(formData, "bodyMd"),
   });
 
@@ -34,9 +36,12 @@ export async function createStudyAction(formData: FormData) {
 
   await createStudy({
     title: parsed.data.title,
+    summary: parsed.data.summary,
+    studyDate: parsed.data.studyDate,
     bodyMd: parsed.data.bodyMd,
   });
 
+  revalidatePath("/");
   revalidatePath("/studies");
   revalidatePath("/admin/studies");
   redirect("/admin/studies?created=1");
@@ -45,6 +50,8 @@ export async function createStudyAction(formData: FormData) {
 export async function updateStudyAction(formData: FormData) {
   const parsed = adminStudySchema.safeParse({
     title: stringValue(formData, "title"),
+    summary: stringValue(formData, "summary"),
+    studyDate: stringValue(formData, "studyDate"),
     bodyMd: stringValue(formData, "bodyMd"),
   });
   const id = Number(stringValue(formData, "id"));
@@ -56,9 +63,12 @@ export async function updateStudyAction(formData: FormData) {
   await updateStudy({
     id,
     title: parsed.data.title,
+    summary: parsed.data.summary,
+    studyDate: parsed.data.studyDate,
     bodyMd: parsed.data.bodyMd,
   });
 
+  revalidatePath("/");
   revalidatePath("/studies");
   revalidatePath("/admin/studies");
   revalidatePath(`/admin/studies/${id}`);
@@ -72,6 +82,7 @@ export async function softDeleteStudyAction(formData: FormData) {
   }
 
   await softDeleteStudy(id);
+  revalidatePath("/");
   revalidatePath("/studies");
   revalidatePath("/admin/studies");
   redirect("/admin/studies?deleted=1");
@@ -84,6 +95,7 @@ export async function restoreStudyAction(formData: FormData) {
   }
 
   await restoreStudy(id);
+  revalidatePath("/");
   revalidatePath("/studies");
   revalidatePath("/admin/studies");
   redirect("/admin/studies?restored=1");

@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: StudyPageProps): Promise<Meta
 
   return {
     title: study.title,
-    description: `Bible study notes published ${formatDate(study.createdAt)}.`,
+    description: study.summary || `Bible study notes from ${formatDate(study.studyDate)}.`,
   };
 }
 
@@ -42,12 +42,13 @@ export default async function StudyDetailPage({ params }: StudyPageProps) {
         <p className="eyebrow">Study Archive</p>
         <h2>{study.title}</h2>
         <div className="meta-row">
-          <span>Published: {formatDate(study.createdAt)}</span>
-          <span>Updated: {formatDate(study.updatedAt)}</span>
+          <span>Study Date: {formatDate(study.studyDate)}</span>
         </div>
+        <p>{study.summary}</p>
       </section>
 
       <StudyContent html={html} />
+      <p className="study-updated-note">Last updated: {formatDate(study.updatedAt)}</p>
     </>
   );
 }

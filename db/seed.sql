@@ -6,11 +6,13 @@ where id = 1
     or welcome_message ilike 'Welcome to Love and Good Works Club.%'
   );
 
-insert into studies (slug, title, body_md)
+insert into studies (slug, title, summary, study_date, body_md)
 values
   (
     'abide-in-christ-john-15',
     'Abide In Christ',
+    'Jesus teaches us to abide in Him and bear fruit through faithful dependence.',
+    '2025-01-12',
     '## Key Passage: John 15:1-11
 
 Jesus teaches us to remain in Him so that our lives bear fruit for the glory of God.

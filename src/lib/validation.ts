@@ -19,6 +19,14 @@ export const prayerRequestSchema = z
 
 export const adminStudySchema = z.object({
   title: z.string().trim().min(3).max(200),
+  summary: z.string().trim().min(8).max(320),
+  studyDate: z
+    .string()
+    .trim()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Use YYYY-MM-DD for study date.")
+    .refine((value) => !Number.isNaN(new Date(`${value}T12:00:00Z`).getTime()), {
+      message: "Study date is invalid.",
+    }),
   bodyMd: z.string().trim().min(10).max(50000),
 });
 
