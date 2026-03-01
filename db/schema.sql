@@ -43,6 +43,7 @@ create table if not exists studies (
   title text not null,
   summary text not null default '',
   study_date date not null default current_date,
+  memory_verses text not null default '',
   body_md text not null,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
@@ -58,6 +59,9 @@ add column if not exists summary text;
 alter table studies
 add column if not exists study_date date;
 
+alter table studies
+add column if not exists memory_verses text;
+
 update studies
 set summary = left(trim(regexp_replace(body_md, E'[\\r\\n]+', ' ', 'g')), 320)
 where summary is null
@@ -66,6 +70,10 @@ where summary is null
 update studies
 set study_date = created_at::date
 where study_date is null;
+
+update studies
+set memory_verses = ''
+where memory_verses is null;
 
 alter table studies
 alter column summary set default '';
@@ -78,6 +86,12 @@ alter column study_date set default current_date;
 
 alter table studies
 alter column study_date set not null;
+
+alter table studies
+alter column memory_verses set default '';
+
+alter table studies
+alter column memory_verses set not null;
 
 create index if not exists studies_deleted_at_idx on studies (deleted_at);
 create index if not exists studies_study_date_idx on studies (study_date desc);

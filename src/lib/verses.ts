@@ -87,3 +87,14 @@ export function linkVerseReferences(markdown: string) {
     })
     .join("");
 }
+
+export function splitMemoryVerses(input: string) {
+  return Array.from(
+    new Set(
+      input
+        .split(/[,\n;]+/g)
+        .map((part) => part.trim())
+        .filter(Boolean),
+    ),
+  );
+}

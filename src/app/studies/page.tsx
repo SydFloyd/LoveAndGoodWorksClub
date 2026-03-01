@@ -23,7 +23,8 @@ export default async function StudiesPage({ searchParams }: StudiesPageProps) {
         <article className="hero stack">
           <h2>Bible Study Archive</h2>
           <p className="studies-subtitle">
-            Search and review notes from Bible study outlines.
+            Search and review notes from Bible study outlines.{" "}
+            <Link href="/studies/memory-verses">Memory Verse History</Link>
           </p>
           <form className="inline-search" method="get">
             <label>
@@ -45,7 +46,7 @@ export default async function StudiesPage({ searchParams }: StudiesPageProps) {
       <section className="stack">
         {studies.length === 0 ? <p>No studies found for this query.</p> : null}
         {studies.map((study) => (
-          <article key={study.id} className="card stack">
+          <article key={study.id} className="card stack study-list-item">
             <div className="study-list-header">
               <h3>
                 <Link href={`/studies/${study.slug}`}>{study.title}</Link>

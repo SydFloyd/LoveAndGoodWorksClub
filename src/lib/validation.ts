@@ -27,6 +27,7 @@ export const adminStudySchema = z.object({
     .refine((value) => !Number.isNaN(new Date(`${value}T12:00:00Z`).getTime()), {
       message: "Study date is invalid.",
     }),
+  memoryVerses: z.string().trim().max(500),
   bodyMd: z.string().trim().min(10).max(50000),
 });
 

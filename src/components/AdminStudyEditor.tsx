@@ -13,6 +13,7 @@ type AdminStudyEditorProps = {
     title: string;
     summary: string;
     studyDate: string;
+    memoryVerses: string;
     bodyMd: string;
   };
 };
@@ -65,7 +66,7 @@ export function AdminStudyEditor({
   bodyRows = 14,
   defaults,
 }: AdminStudyEditorProps) {
-  const editorKey = `${defaults.id ?? "new"}:${defaults.title}:${defaults.summary}:${defaults.studyDate}:${defaults.bodyMd.length}`;
+  const editorKey = `${defaults.id ?? "new"}:${defaults.title}:${defaults.summary}:${defaults.studyDate}:${defaults.memoryVerses}:${defaults.bodyMd.length}`;
   const [bodyMd, setBodyMd] = useState(defaults.bodyMd);
   const [previewHtml, setPreviewHtml] = useState(() => renderPreview(defaults.bodyMd));
 
@@ -95,6 +96,17 @@ export function AdminStudyEditor({
         <label>
           Study Date
           <input type="date" name="studyDate" required defaultValue={defaults.studyDate} />
+        </label>
+
+        <label>
+          Memory Verse(s)
+          <input
+            type="text"
+            name="memoryVerses"
+            maxLength={500}
+            defaultValue={defaults.memoryVerses}
+            placeholder="John 3:16, Romans 12:1-2"
+          />
         </label>
 
         <label>

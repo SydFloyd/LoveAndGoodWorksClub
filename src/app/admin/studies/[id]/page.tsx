@@ -39,6 +39,7 @@ export default async function AdminEditStudyPage({ params }: AdminEditStudyPageP
           title: study.title,
           summary: study.summary,
           studyDate: formatDateInputValue(study.studyDate),
+          memoryVerses: study.memoryVerses,
           bodyMd: study.bodyMd,
         }}
       />

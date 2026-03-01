@@ -9,10 +9,19 @@ export type Study = {
   title: string;
   summary: string;
   studyDate: Date;
+  memoryVerses: string;
   bodyMd: string;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date | null;
+};
+
+export type StudyMemoryVerse = {
+  id: number;
+  slug: string;
+  title: string;
+  studyDate: Date;
+  memoryVerses: string;
 };
 
 export type PrayerRequest = {

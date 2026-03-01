@@ -6,6 +6,7 @@ import type {
   ResourceLink,
   SiteSettings,
   Study,
+  StudyMemoryVerse,
 } from "@/lib/types";
 
 type SiteSettingsRow = {
@@ -19,10 +20,19 @@ type StudyRow = {
   title: string;
   summary: string;
   study_date: Date | string;
+  memory_verses: string | null;
   body_md: string;
   created_at: Date;
   updated_at: Date;
   deleted_at: Date | null;
+};
+
+type StudyMemoryVerseRow = {
+  id: number | string;
+  slug: string;
+  title: string;
+  study_date: Date | string;
+  memory_verses: string | null;
 };
 
 type PrayerRequestRow = {
@@ -92,10 +102,26 @@ function mapStudy(row: StudyRow): Study {
     title: row.title,
     summary,
     studyDate: normalizeDate(row.study_date),
+    memoryVerses: (row.memory_verses || "").trim(),
     bodyMd: row.body_md,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
     deletedAt: row.deleted_at,
+  };
+}
+
+function mapStudyMemoryVerse(row: StudyMemoryVerseRow): StudyMemoryVerse {
+  const id = Number(row.id);
+  if (!Number.isFinite(id) || id <= 0) {
+    throw new Error(`Invalid study id: ${String(row.id)}`);
+  }
+
+  return {
+    id,
+    slug: row.slug,
+    title: row.title,
+    studyDate: normalizeDate(row.study_date),
+    memoryVerses: (row.memory_verses || "").trim(),
   };
 }
 
@@ -162,6 +188,7 @@ export async function listStudies(params: { query?: string }) {
       s.title,
       s.summary,
       s.study_date,
+      s.memory_verses,
       s.body_md,
       s.created_at,
       s.updated_at,
@@ -171,6 +198,7 @@ export async function listStudies(params: { query?: string }) {
       ${searchQuery}::text is null
       or s.title ilike '%' || ${searchQuery} || '%'
       or s.summary ilike '%' || ${searchQuery} || '%'
+      or s.memory_verses ilike '%' || ${searchQuery} || '%'
       or s.body_md ilike '%' || ${searchQuery} || '%'
     )
     and s.deleted_at is null
@@ -189,6 +217,7 @@ export async function listTrashedStudies() {
       s.title,
       s.summary,
       s.study_date,
+      s.memory_verses,
       s.body_md,
       s.created_at,
       s.updated_at,
@@ -210,6 +239,7 @@ export async function getStudyBySlug(slug: string) {
       s.title,
       s.summary,
       s.study_date,
+      s.memory_verses,
       s.body_md,
       s.created_at,
       s.updated_at,
@@ -232,6 +262,7 @@ export async function getStudyById(id: number) {
       s.title,
       s.summary,
       s.study_date,
+      s.memory_verses,
       s.body_md,
       s.created_at,
       s.updated_at,
@@ -244,7 +275,13 @@ export async function getStudyById(id: number) {
   return row ? mapStudy(row) : null;
 }
 
-export async function createStudy(input: { title: string; summary: string; studyDate: string; bodyMd: string }) {
+export async function createStudy(input: {
+  title: string;
+  summary: string;
+  studyDate: string;
+  memoryVerses: string;
+  bodyMd: string;
+}) {
   const baseSlug = slugify(input.title, { lower: true, strict: true, trim: true }) || "study";
   let slug = baseSlug;
   let suffix = 2;
@@ -264,8 +301,15 @@ export async function createStudy(input: { title: string; summary: string; study
   }
 
   const [study] = await sql<{ id: number; slug: string }[]>`
-    insert into studies (slug, title, summary, study_date, body_md)
-    values (${slug}, ${input.title}, ${input.summary}, ${input.studyDate}::date, ${input.bodyMd})
+    insert into studies (slug, title, summary, study_date, memory_verses, body_md)
+    values (
+      ${slug},
+      ${input.title},
+      ${input.summary},
+      ${input.studyDate}::date,
+      ${input.memoryVerses},
+      ${input.bodyMd}
+    )
     returning id, slug
   `;
 
@@ -277,6 +321,7 @@ export async function updateStudy(input: {
   title: string;
   summary: string;
   studyDate: string;
+  memoryVerses: string;
   bodyMd: string;
 }) {
   await sql`
@@ -285,11 +330,29 @@ export async function updateStudy(input: {
       title = ${input.title},
       summary = ${input.summary},
       study_date = ${input.studyDate}::date,
+      memory_verses = ${input.memoryVerses},
       body_md = ${input.bodyMd},
       updated_at = now()
     where id = ${input.id}
       and deleted_at is null
   `;
+}
+
+export async function listStudyMemoryVerses() {
+  noStore();
+  const rows = await sql<StudyMemoryVerseRow[]>`
+    select
+      s.id,
+      s.slug,
+      s.title,
+      s.study_date,
+      s.memory_verses
+    from studies s
+    where s.deleted_at is null
+    order by s.study_date desc, s.created_at desc
+  `;
+
+  return rows.map(mapStudyMemoryVerse);
 }
 
 export async function softDeleteStudy(id: number) {

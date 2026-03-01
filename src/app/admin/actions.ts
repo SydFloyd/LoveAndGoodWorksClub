@@ -30,6 +30,7 @@ export async function createStudyAction(formData: FormData) {
     title: stringValue(formData, "title"),
     summary: stringValue(formData, "summary"),
     studyDate: stringValue(formData, "studyDate"),
+    memoryVerses: stringValue(formData, "memoryVerses"),
     bodyMd: stringValue(formData, "bodyMd"),
   });
 
@@ -41,11 +42,13 @@ export async function createStudyAction(formData: FormData) {
     title: parsed.data.title,
     summary: parsed.data.summary,
     studyDate: parsed.data.studyDate,
+    memoryVerses: parsed.data.memoryVerses,
     bodyMd: parsed.data.bodyMd,
   });
 
   revalidatePath("/");
   revalidatePath("/studies");
+  revalidatePath("/studies/memory-verses");
   revalidatePath("/admin/studies");
   redirect("/admin/studies?created=1");
 }
@@ -55,6 +58,7 @@ export async function updateStudyAction(formData: FormData) {
     title: stringValue(formData, "title"),
     summary: stringValue(formData, "summary"),
     studyDate: stringValue(formData, "studyDate"),
+    memoryVerses: stringValue(formData, "memoryVerses"),
     bodyMd: stringValue(formData, "bodyMd"),
   });
   const id = Number(stringValue(formData, "id"));
@@ -73,11 +77,13 @@ export async function updateStudyAction(formData: FormData) {
     title: parsed.data.title,
     summary: parsed.data.summary,
     studyDate: parsed.data.studyDate,
+    memoryVerses: parsed.data.memoryVerses,
     bodyMd: parsed.data.bodyMd,
   });
 
   revalidatePath("/");
   revalidatePath("/studies");
+  revalidatePath("/studies/memory-verses");
   revalidatePath("/studies/[slug]", "page");
   revalidatePath(`/studies/${existingStudy.slug}`);
   revalidatePath("/admin/studies");
@@ -95,6 +101,7 @@ export async function softDeleteStudyAction(formData: FormData) {
   await softDeleteStudy(id);
   revalidatePath("/");
   revalidatePath("/studies");
+  revalidatePath("/studies/memory-verses");
   revalidatePath("/admin/studies");
   redirect("/admin/studies?deleted=1");
 }
@@ -108,6 +115,7 @@ export async function restoreStudyAction(formData: FormData) {
   await restoreStudy(id);
   revalidatePath("/");
   revalidatePath("/studies");
+  revalidatePath("/studies/memory-verses");
   revalidatePath("/admin/studies");
   redirect("/admin/studies?restored=1");
 }

@@ -25,8 +25,8 @@ export default async function AdminStudiesPage({ searchParams }: AdminStudiesPag
         <p className="eyebrow">Admin / Studies</p>
         <h2>Create Study Notes</h2>
         <p>
-          This editor stores title, summary, study date, and markdown body. Markdown supports bold, italics,
-          strikethrough, headers, and bullets.
+          This editor stores title, summary, study date, memory verse(s), and markdown body. Markdown supports
+          bold, italics, strikethrough, headers, and bullets.
         </p>
       </section>
 
@@ -44,6 +44,7 @@ export default async function AdminStudiesPage({ searchParams }: AdminStudiesPag
           title: "",
           summary: "",
           studyDate: defaultStudyDate,
+          memoryVerses: "",
           bodyMd: "",
         }}
       />
@@ -57,6 +58,7 @@ export default async function AdminStudiesPage({ searchParams }: AdminStudiesPag
             <p>{study.summary}</p>
             <div className="meta-row">
               <span>Study Date: {formatDate(study.studyDate)}</span>
+              <span>Memory Verse(s): {study.memoryVerses || "None assigned"}</span>
               <span>Updated: {formatDate(study.updatedAt)}</span>
               <span>{study.slug}</span>
             </div>

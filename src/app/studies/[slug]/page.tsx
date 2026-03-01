@@ -4,6 +4,7 @@ import { StudyContent } from "@/components/StudyContent";
 import { getStudyBySlug } from "@/lib/data";
 import { formatDate } from "@/lib/format";
 import { renderStudyMarkdown } from "@/lib/markdown";
+import { splitMemoryVerses } from "@/lib/verses";
 
 type StudyPageProps = {
   params: Promise<{
@@ -35,14 +36,35 @@ export default async function StudyDetailPage({ params }: StudyPageProps) {
   }
 
   const html = renderStudyMarkdown(study.bodyMd);
+  const memoryVerseReferences = splitMemoryVerses(study.memoryVerses);
 
   return (
     <>
       <section className="card stack">
-        <p className="eyebrow">Study Archive</p>
         <h2>{study.title}</h2>
         <div className="meta-row">
           <span>Study Date: {formatDate(study.studyDate)}</span>
+        </div>
+        <div className="memory-verse-row">
+          <span className="memory-verse-label">Memory Verse(s): </span>
+          {memoryVerseReferences.length === 0 ? (
+            <span>None assigned.</span>
+          ) : (
+            <span className="memory-verse-list">
+              {memoryVerseReferences.map((reference, index) => (
+                <span key={`${reference}-${index}`}>
+                  {index > 0 ? ", " : ""}
+                  <button
+                    className="verse-link"
+                    data-verse={encodeURIComponent(reference)}
+                    type="button"
+                  >
+                    {reference}
+                  </button>
+                </span>
+              ))}
+            </span>
+          )}
         </div>
         <p>{study.summary}</p>
       </section>

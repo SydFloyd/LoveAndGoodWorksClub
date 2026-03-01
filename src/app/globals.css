@@ -234,6 +234,11 @@ textarea {
   color: var(--ink-soft);
 }
 
+.studies-subtitle a {
+  font-weight: 700;
+  text-decoration: underline;
+}
+
 .resource-line {
   line-height: 1.6;
   margin: 0.15rem 0;
@@ -569,6 +574,29 @@ textarea {
 .study-list-header span {
   color: var(--ink-soft);
   font-weight: 700;
+}
+
+.study-list-item {
+  gap: 0.45rem;
+}
+
+.study-list-item p {
+  margin: 0;
+  line-height: 1.35;
+}
+
+.memory-verse-row {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.memory-verse-label {
+  font-weight: 700;
+}
+
+.muted-text {
+  color: var(--ink-soft);
+  font-style: italic;
 }
 
 .study-layout {
