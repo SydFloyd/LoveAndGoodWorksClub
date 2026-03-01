@@ -1,4 +1,9 @@
-import { createResourceAction, updateSiteSettingsAction } from "@/app/admin/actions";
+import {
+  createResourceAction,
+  deleteResourceAction,
+  updateSiteSettingsAction,
+  updateResourceAction,
+} from "@/app/admin/actions";
 import { getResources, getSiteSettings } from "@/lib/data";
 
 type AdminContentPageProps = {
@@ -65,13 +70,44 @@ export default async function AdminContentPage({ searchParams }: AdminContentPag
               Add Resource
             </button>
           </form>
+          <h3>Edit or Delete Existing Resources</h3>
           <div className="stack">
-            {resources.slice(0, 8).map((resource) => (
-              <div key={resource.id}>
-                <p>
-                  <strong>{resource.title}</strong> ({resource.category})
-                </p>
-              </div>
+            {resources.length === 0 ? <p>No resources yet.</p> : null}
+            {resources.map((resource) => (
+              <article key={resource.id} className="card stack">
+                <form className="stack" action={updateResourceAction}>
+                  <input type="hidden" name="id" value={resource.id} />
+                  <label>
+                    Category
+                    <select name="category" defaultValue={resource.category}>
+                      <option value="BOOK">Book</option>
+                      <option value="ARTICLE">Article</option>
+                      <option value="TOOL">Tool</option>
+                    </select>
+                  </label>
+                  <label>
+                    Title
+                    <input type="text" name="title" required defaultValue={resource.title} />
+                  </label>
+                  <label>
+                    URL
+                    <input type="url" name="url" required defaultValue={resource.url} />
+                  </label>
+                  <label>
+                    Description
+                    <textarea name="description" rows={3} defaultValue={resource.description} />
+                  </label>
+                  <button className="button-primary" type="submit">
+                    Save Changes
+                  </button>
+                </form>
+                <form action={deleteResourceAction}>
+                  <input type="hidden" name="id" value={resource.id} />
+                  <button className="button-outline" type="submit">
+                    Delete Resource
+                  </button>
+                </form>
+              </article>
             ))}
           </div>
         </article>

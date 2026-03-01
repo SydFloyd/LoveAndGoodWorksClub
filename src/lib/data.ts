@@ -1,4 +1,5 @@
 import slugify from "slugify";
+import { unstable_noStore as noStore } from "next/cache";
 import { sql } from "@/lib/db";
 import type {
   PrayerRequest,
@@ -13,7 +14,7 @@ type SiteSettingsRow = {
 };
 
 type StudyRow = {
-  id: number;
+  id: number | string;
   slug: string;
   title: string;
   summary: string;
@@ -25,7 +26,7 @@ type StudyRow = {
 };
 
 type PrayerRequestRow = {
-  id: number;
+  id: number | string;
   requester_name: string | null;
   requester_email: string | null;
   is_anonymous: boolean;
@@ -37,7 +38,7 @@ type PrayerRequestRow = {
 };
 
 type ResourceRow = {
-  id: number;
+  id: number | string;
   category: "BOOK" | "ARTICLE" | "TOOL";
   title: string;
   url: string;
@@ -64,7 +65,7 @@ function markdownPreview(markdown: string) {
 
 function normalizeDate(value: Date | string): Date {
   if (value instanceof Date) {
-    return value;
+    return new Date(Date.UTC(value.getUTCFullYear(), value.getUTCMonth(), value.getUTCDate(), 12, 0, 0));
   }
 
   if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
@@ -80,9 +81,13 @@ function normalizeDate(value: Date | string): Date {
 
 function mapStudy(row: StudyRow): Study {
   const summary = row.summary.trim() || markdownPreview(row.body_md) || "Study outline available.";
+  const id = Number(row.id);
+  if (!Number.isFinite(id) || id <= 0) {
+    throw new Error(`Invalid study id: ${String(row.id)}`);
+  }
 
   return {
-    id: row.id,
+    id,
     slug: row.slug,
     title: row.title,
     summary,
@@ -95,8 +100,13 @@ function mapStudy(row: StudyRow): Study {
 }
 
 function mapPrayerRequest(row: PrayerRequestRow): PrayerRequest {
+  const id = Number(row.id);
+  if (!Number.isFinite(id) || id <= 0) {
+    throw new Error(`Invalid prayer request id: ${String(row.id)}`);
+  }
+
   return {
-    id: row.id,
+    id,
     requesterName: row.requester_name,
     requesterEmail: row.requester_email,
     isAnonymous: row.is_anonymous,
@@ -109,8 +119,13 @@ function mapPrayerRequest(row: PrayerRequestRow): PrayerRequest {
 }
 
 function mapResource(row: ResourceRow): ResourceLink {
+  const id = Number(row.id);
+  if (!Number.isFinite(id) || id <= 0) {
+    throw new Error(`Invalid resource id: ${String(row.id)}`);
+  }
+
   return {
-    id: row.id,
+    id,
     category: row.category,
     title: row.title,
     url: row.url,
@@ -137,6 +152,7 @@ export async function getSiteSettings() {
 }
 
 export async function listStudies(params: { query?: string }) {
+  noStore();
   const searchQuery = params.query?.trim() || null;
 
   const rows = await sql<StudyRow[]>`
@@ -165,6 +181,7 @@ export async function listStudies(params: { query?: string }) {
 }
 
 export async function listTrashedStudies() {
+  noStore();
   const rows = await sql<StudyRow[]>`
     select
       s.id,
@@ -185,6 +202,7 @@ export async function listTrashedStudies() {
 }
 
 export async function getStudyBySlug(slug: string) {
+  noStore();
   const [row] = await sql<StudyRow[]>`
     select
       s.id,
@@ -206,6 +224,7 @@ export async function getStudyBySlug(slug: string) {
 }
 
 export async function getStudyById(id: number) {
+  noStore();
   const [row] = await sql<StudyRow[]>`
     select
       s.id,
@@ -373,5 +392,30 @@ export async function createResource(input: {
   await sql`
     insert into resources_links (category, title, url, description)
     values (${input.category}, ${input.title}, ${input.url}, ${input.description})
+  `;
+}
+
+export async function updateResource(input: {
+  id: number;
+  category: "BOOK" | "ARTICLE" | "TOOL";
+  title: string;
+  url: string;
+  description: string;
+}) {
+  await sql`
+    update resources_links
+    set
+      category = ${input.category},
+      title = ${input.title},
+      url = ${input.url},
+      description = ${input.description}
+    where id = ${input.id}
+  `;
+}
+
+export async function deleteResource(id: number) {
+  await sql`
+    delete from resources_links
+    where id = ${id}
   `;
 }

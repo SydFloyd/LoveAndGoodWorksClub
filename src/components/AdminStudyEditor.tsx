@@ -9,7 +9,7 @@ type AdminStudyEditorProps = {
   submitLabel: string;
   bodyRows?: number;
   defaults: {
-    id?: number;
+    id?: number | string;
     title: string;
     summary: string;
     studyDate: string;
@@ -64,6 +64,7 @@ export function AdminStudyEditor({
   bodyRows = 14,
   defaults,
 }: AdminStudyEditorProps) {
+  const editorKey = `${defaults.id ?? "new"}:${defaults.title}:${defaults.summary}:${defaults.studyDate}:${defaults.bodyMd.length}`;
   const [bodyMd, setBodyMd] = useState(defaults.bodyMd);
   const [previewHtml, setPreviewHtml] = useState(() => renderPreview(defaults.bodyMd));
 
@@ -76,9 +77,9 @@ export function AdminStudyEditor({
   }, [bodyMd]);
 
   return (
-    <section className="card stack">
+    <section key={editorKey} className="card stack">
       <form className="stack" action={action}>
-        {typeof defaults.id === "number" ? <input type="hidden" name="id" value={defaults.id} /> : null}
+        {defaults.id !== undefined ? <input type="hidden" name="id" value={defaults.id} /> : null}
 
         <label>
           Title

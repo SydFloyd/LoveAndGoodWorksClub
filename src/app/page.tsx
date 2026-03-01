@@ -29,7 +29,6 @@ export default async function HomePage() {
           <Image src="/lgwc-logo-1.png" alt="Love & Good Works Logo" width={600} height={600} priority />
         </article>
         <article className="hero stack">
-          <p className="eyebrow">Welcome</p>
           <h2>Love & Good Works</h2>
           <p>{settings.welcomeMessage}</p>
           <blockquote className="scripture-quote">
