@@ -749,6 +749,12 @@ textarea {
   color: var(--accent-strong);
 }
 
+.admin-filter-panel summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--accent-strong);
+}
+
 table {
   width: 100%;
   border-collapse: collapse;

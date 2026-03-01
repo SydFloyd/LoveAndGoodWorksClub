@@ -25,6 +25,23 @@ function stringValue(formData: FormData, key: string) {
   return typeof value === "string" ? value : "";
 }
 
+function resolvePrayerReturnPath(returnTo: string) {
+  const fallback = "/admin/prayer";
+  const trimmed = returnTo.trim();
+  if (!trimmed.startsWith("/admin/prayer")) {
+    return fallback;
+  }
+  return trimmed;
+}
+
+function appendQueryParam(path: string, key: string, value: string) {
+  const [pathname, queryString = ""] = path.split("?", 2);
+  const query = new URLSearchParams(queryString);
+  query.set(key, value);
+  const nextQuery = query.toString();
+  return nextQuery ? `${pathname}?${nextQuery}` : pathname;
+}
+
 export async function createStudyAction(formData: FormData) {
   const parsed = adminStudySchema.safeParse({
     title: stringValue(formData, "title"),
@@ -204,13 +221,14 @@ export async function deleteResourceAction(formData: FormData) {
 export async function markPrayerReviewedAction(formData: FormData) {
   const idRaw = stringValue(formData, "id");
   const note = stringValue(formData, "reviewerNote");
+  const returnTo = resolvePrayerReturnPath(stringValue(formData, "returnTo"));
   const id = Number(idRaw);
 
   if (!Number.isFinite(id)) {
-    redirect("/admin/prayer?error=invalid-id");
+    redirect(appendQueryParam(returnTo, "error", "invalid-id"));
   }
 
   await markPrayerReviewed(id, note.trim());
   revalidatePath("/admin/prayer");
-  redirect("/admin/prayer?updated=1");
+  redirect(appendQueryParam(returnTo, "updated", "1"));
 }

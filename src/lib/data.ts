@@ -399,6 +399,7 @@ export async function createPrayerRequest(input: {
 }
 
 export async function listPrayerRequestsSince(days: number) {
+  noStore();
   const rows = await sql<PrayerRequestRow[]>`
     select
       id,
@@ -415,6 +416,114 @@ export async function listPrayerRequestsSince(days: number) {
     order by created_at desc
   `;
   return rows.map(mapPrayerRequest);
+}
+
+function normalizeDateFilter(value?: string) {
+  const input = value?.trim() || "";
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(input)) {
+    return null;
+  }
+  const parsed = new Date(`${input}T12:00:00Z`);
+  return Number.isNaN(parsed.getTime()) ? null : input;
+}
+
+export async function listPrayerRequests(params: {
+  page: number;
+  pageSize: number;
+  pendingOnly?: boolean;
+  requesterName?: string;
+  fromDate?: string;
+  toDate?: string;
+}) {
+  noStore();
+  const pendingOnly = Boolean(params.pendingOnly);
+  const requesterName = params.requesterName?.trim() || null;
+  const fromDate = normalizeDateFilter(params.fromDate);
+  const toDate = normalizeDateFilter(params.toDate);
+  const pageSize = Number.isFinite(params.pageSize) ? Math.max(1, Math.min(100, Math.floor(params.pageSize))) : 25;
+  const requestedPage = Number.isFinite(params.page) ? Math.max(1, Math.floor(params.page)) : 1;
+
+  const [countRow] = await sql<{ total: number | string }[]>`
+    select count(*)::int as total
+    from prayer_requests p
+    where (
+      ${pendingOnly}::boolean = false
+      or p.reviewed = false
+    )
+    and (
+      ${requesterName}::text is null
+      or coalesce(p.requester_name, '') ilike '%' || ${requesterName} || '%'
+    )
+    and (
+      ${fromDate}::date is null
+      or p.created_at::date >= ${fromDate}::date
+    )
+    and (
+      ${toDate}::date is null
+      or p.created_at::date <= ${toDate}::date
+    )
+  `;
+
+  const total = Number(countRow?.total || 0);
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  const page = Math.min(requestedPage, totalPages);
+  const offset = (page - 1) * pageSize;
+
+  const rows = await sql<PrayerRequestRow[]>`
+    select
+      p.id,
+      p.requester_name,
+      p.requester_email,
+      p.is_anonymous,
+      p.request_text,
+      p.reviewed,
+      p.reviewer_note,
+      p.submitted_ip_hash,
+      p.created_at
+    from prayer_requests p
+    where (
+      ${pendingOnly}::boolean = false
+      or p.reviewed = false
+    )
+    and (
+      ${requesterName}::text is null
+      or coalesce(p.requester_name, '') ilike '%' || ${requesterName} || '%'
+    )
+    and (
+      ${fromDate}::date is null
+      or p.created_at::date >= ${fromDate}::date
+    )
+    and (
+      ${toDate}::date is null
+      or p.created_at::date <= ${toDate}::date
+    )
+    order by p.created_at desc
+    limit ${pageSize}
+    offset ${offset}
+  `;
+
+  return {
+    items: rows.map(mapPrayerRequest),
+    total,
+    page,
+    pageSize,
+    totalPages,
+  };
+}
+
+export async function getPrayerRequestStats() {
+  noStore();
+  const [row] = await sql<{ total: number | string; unreviewed: number | string }[]>`
+    select
+      count(*)::int as total,
+      count(*) filter (where reviewed = false)::int as unreviewed
+    from prayer_requests
+  `;
+
+  return {
+    total: Number(row?.total || 0),
+    unreviewed: Number(row?.unreviewed || 0),
+  };
 }
 
 export async function markPrayerReviewed(id: number, reviewerNote: string) {

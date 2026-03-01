@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { updateSiteSettingsAction } from "@/app/admin/actions";
 import {
+  getPrayerRequestStats,
   getResources,
   getSiteSettings,
-  listPrayerRequestsSince,
   listStudies,
 } from "@/lib/data";
 
@@ -16,21 +16,19 @@ type AdminDashboardPageProps = {
 
 export default async function AdminDashboardPage({ searchParams }: AdminDashboardPageProps) {
   const params = await searchParams;
-  const [recentPrayer, studies, resources, settings] = await Promise.all([
-    listPrayerRequestsSince(7),
+  const [prayerStats, studies, resources, settings] = await Promise.all([
+    getPrayerRequestStats(),
     listStudies({}),
     getResources(),
     getSiteSettings(),
   ]);
-
-  const unreviewedPrayer = recentPrayer.filter((item) => !item.reviewed).length;
 
   return (
     <>
       <section className="hero stack admin-panel-tight">
         <p className="eyebrow">Admin</p>
         <h2>Content & Ministry Dashboard</h2>
-        <p>Manage studies, welcome message, resources, and weekly prayer review.</p>
+        <p>Manage studies, welcome message, resources, and prayer request review.</p>
       </section>
 
       {params.updated ? <p className="status success">Saved: {params.updated}</p> : null}
@@ -51,9 +49,9 @@ export default async function AdminDashboardPage({ searchParams }: AdminDashboar
 
       <section className="grid cols-3">
         <article className="card stack admin-panel-tight">
-          <h3>Prayer Requests (7 days)</h3>
-          <p>Total: {recentPrayer.length}</p>
-          <p>Unreviewed: {unreviewedPrayer}</p>
+          <h3>Prayer Requests</h3>
+          <p>Total: {prayerStats.total}</p>
+          <p>Unreviewed: {prayerStats.unreviewed}</p>
           <Link href="/admin/prayer" className="button-primary">
             Review Prayer Requests
           </Link>
