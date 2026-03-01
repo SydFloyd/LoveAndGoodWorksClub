@@ -267,10 +267,10 @@ export async function getAdjacentStudiesBySlug(slug: string) {
       select
         s.slug,
         s.title,
-        lag(s.slug) over (order by s.study_date desc, s.created_at desc) as prev_slug,
-        lag(s.title) over (order by s.study_date desc, s.created_at desc) as prev_title,
-        lead(s.slug) over (order by s.study_date desc, s.created_at desc) as next_slug,
-        lead(s.title) over (order by s.study_date desc, s.created_at desc) as next_title
+        lag(s.slug) over (order by s.study_date asc, s.created_at asc) as prev_slug,
+        lag(s.title) over (order by s.study_date asc, s.created_at asc) as prev_title,
+        lead(s.slug) over (order by s.study_date asc, s.created_at asc) as next_slug,
+        lead(s.title) over (order by s.study_date asc, s.created_at asc) as next_title
       from studies s
       where s.deleted_at is null
     )
