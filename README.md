@@ -78,3 +78,4 @@ npm run dev
 - The site uses password-based access with user/admin separation.
 - Prayer requests are one-way and private; they do not publish publicly.
 - The admin prayer page is optimized for weekly review workflow.
+
