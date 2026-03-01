@@ -100,7 +100,7 @@ export function AppChrome({
 
       <footer className="site-footer">
         <div className="container footer-inner">
-          <p>Love & Good Works</p>
+          <p>Love & Good Works Club</p>
           <p>Hebrews 10:24</p>
         </div>
       </footer>

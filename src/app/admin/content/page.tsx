@@ -1,10 +1,9 @@
 import {
   createResourceAction,
   deleteResourceAction,
-  updateSiteSettingsAction,
   updateResourceAction,
 } from "@/app/admin/actions";
-import { getResources, getSiteSettings } from "@/lib/data";
+import { getResources } from "@/lib/data";
 
 type AdminContentPageProps = {
   searchParams: Promise<{
@@ -15,32 +14,18 @@ type AdminContentPageProps = {
 
 export default async function AdminContentPage({ searchParams }: AdminContentPageProps) {
   const params = await searchParams;
-  const [settings, resources] = await Promise.all([getSiteSettings(), getResources()]);
+  const resources = await getResources();
 
   return (
     <>
       <section className="hero stack">
         <p className="eyebrow">Admin / Content</p>
-        <h2>Manage Home and Resources</h2>
+        <h2>Manage Resources</h2>
         <p>Calendar updates are managed directly in Google Calendar.</p>
       </section>
 
       {params.updated ? <p className="status success">Saved: {params.updated}</p> : null}
       {params.error ? <p className="status error">Error: {params.error}</p> : null}
-
-      <section className="card stack">
-        <h3>Home Settings</h3>
-        <form className="stack" action={updateSiteSettingsAction}>
-          <label>
-            Welcome Message
-            <textarea name="welcomeMessage" defaultValue={settings.welcomeMessage} rows={5} required />
-          </label>
-
-          <button className="button-primary" type="submit">
-            Save Welcome Message
-          </button>
-        </form>
-      </section>
 
       <section>
         <article id="resources-center" className="card stack">

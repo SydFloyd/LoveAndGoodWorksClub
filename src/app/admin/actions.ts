@@ -126,8 +126,8 @@ export async function updateSiteSettingsAction(formData: FormData) {
   });
 
   revalidatePath("/");
-  revalidatePath("/admin/content");
-  redirect("/admin/content?updated=settings");
+  revalidatePath("/admin");
+  redirect("/admin?updated=settings");
 }
 
 export async function createResourceAction(formData: FormData) {

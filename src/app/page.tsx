@@ -29,7 +29,7 @@ export default async function HomePage() {
           <Image src="/lgwc-logo-1.png" alt="Love & Good Works Logo" width={600} height={600} priority />
         </article>
         <article className="hero stack">
-          <h2>Love & Good Works</h2>
+          <h2>Love & Good Works Club</h2>
           <p>{settings.welcomeMessage}</p>
           <blockquote className="scripture-quote">
             And let us consider how to stir up one another to love and good works, not neglecting to meet
