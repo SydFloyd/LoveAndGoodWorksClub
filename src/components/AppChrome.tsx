@@ -3,15 +3,17 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import type { SiteAccessRole } from "@/lib/auth";
 
-const navItems = [
+const baseNavItems = [
   { href: "/", label: "Home" },
   { href: "/studies", label: "Studies" },
   { href: "/calendar", label: "Calendar" },
   { href: "/prayer", label: "Prayer" },
   { href: "/resources", label: "Resources" },
-  { href: "/admin", label: "Admin" },
 ];
+
+const adminNavItem = { href: "/admin", label: "Admin" };
 
 function NavLink({ href, label }: { href: string; label: string }) {
   const pathname = usePathname();
@@ -24,9 +26,16 @@ function NavLink({ href, label }: { href: string; label: string }) {
   );
 }
 
-export function AppChrome({ children }: { children: React.ReactNode }) {
+export function AppChrome({
+  children,
+  accessRole,
+}: {
+  children: React.ReactNode;
+  accessRole?: SiteAccessRole | null;
+}) {
   const pathname = usePathname();
   const hideChrome = pathname.startsWith("/gate");
+  const navItems = accessRole === "admin" ? [...baseNavItems, adminNavItem] : baseNavItems;
 
   if (hideChrome) {
     return <>{children}</>;
@@ -41,17 +50,41 @@ export function AppChrome({ children }: { children: React.ReactNode }) {
             <h1 className="brand-title">Love & Good Works</h1>
           </Link>
 
-          <nav className="site-nav" aria-label="Primary">
+          <nav className="site-nav site-nav-desktop" aria-label="Primary">
             {navItems.map((item) => (
               <NavLink key={item.href} href={item.href} label={item.label} />
             ))}
           </nav>
 
-          <form action="/api/auth/logout" method="post">
-            <button className="button-outline" type="submit">
-              Sign Out
-            </button>
-          </form>
+          <div className="header-right">
+            <details className="site-nav-mobile">
+              <summary aria-label="Open navigation menu">
+                <span className="hamburger-icon" aria-hidden="true">
+                  <span />
+                  <span />
+                  <span />
+                </span>
+              </summary>
+              <div className="site-nav-mobile-panel">
+                <nav className="site-nav site-nav-dropdown" aria-label="Primary">
+                  {navItems.map((item) => (
+                    <NavLink key={`mobile-${item.href}`} href={item.href} label={item.label} />
+                  ))}
+                </nav>
+                <form action="/api/auth/logout" method="post" className="site-nav-mobile-signout">
+                  <button className="button-outline" type="submit">
+                    Sign Out
+                  </button>
+                </form>
+              </div>
+            </details>
+
+            <form action="/api/auth/logout" method="post" className="site-signout-desktop">
+              <button className="button-outline" type="submit">
+                Sign Out
+              </button>
+            </form>
+          </div>
         </div>
       </header>
 
