@@ -66,13 +66,15 @@ export default async function HomePage() {
             <div className="latest-studies-list">
               {latestStudies.length === 0 ? <p>No studies posted yet.</p> : null}
               {latestStudies.map((study) => (
-                <article key={study.id} className="latest-study-item">
+                <Link key={study.id} href={`/studies/${study.slug}`} className="latest-study-item">
                   <p className="latest-study-line">
-                    <Link href={`/studies/${study.slug}`}>{study.title}</Link>
-                    <span> - {study.summary}</span>
+                    <span className="latest-study-text">
+                      <span className="latest-study-title">{study.title}</span>
+                      <span> - {study.summary}</span>
+                    </span>
+                    <span className="latest-study-date">{formatDate(study.studyDate)}</span>
                   </p>
-                  <p className="latest-study-date">{formatDate(study.studyDate)}</p>
-                </article>
+                </Link>
               ))}
             </div>
             <Link href="/studies" className="button-primary">

@@ -167,22 +167,42 @@ textarea {
 }
 
 .latest-study-item {
-  display: grid;
-  gap: 0.2rem;
+  display: block;
   margin: 0;
   border: 1px solid var(--line);
   border-radius: 10px;
   background: #fffaf4;
   padding: 0.55rem 0.65rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.latest-study-item:hover {
+  background: #fff4e5;
+}
+
+.latest-study-item:focus-visible {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: 2px;
 }
 
 .latest-study-line {
   margin: 0;
-  line-height: 1.35;
+  line-height: 1.45;
+  font-size: 1.03rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.65rem;
+  align-items: baseline;
 }
 
-.latest-study-line a {
+.latest-study-text {
+  min-width: 0;
+}
+
+.latest-study-title {
   font-weight: 700;
+  color: var(--accent-strong);
 }
 
 .latest-study-date {
@@ -256,6 +276,41 @@ textarea {
 .resource-list {
   display: grid;
   gap: 0.15rem;
+}
+
+.resource-editor {
+  gap: 0.7rem;
+}
+
+.resource-editor-summary {
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.8rem;
+  cursor: pointer;
+}
+
+.resource-editor-summary::-webkit-details-marker {
+  display: none;
+}
+
+.resource-editor-summary-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.resource-editor-summary-line {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  line-height: 1.35;
+  word-break: break-word;
+}
+
+.resource-edit-toggle {
+  pointer-events: none;
 }
 
 .beliefs-text {

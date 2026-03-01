@@ -15,6 +15,11 @@ type AdminContentPageProps = {
 export default async function AdminContentPage({ searchParams }: AdminContentPageProps) {
   const params = await searchParams;
   const resources = await getResources();
+  const categoryLabel: Record<"BOOK" | "ARTICLE" | "TOOL", string> = {
+    BOOK: "Book",
+    ARTICLE: "Article",
+    TOOL: "Tool",
+  };
 
   return (
     <>
@@ -59,7 +64,19 @@ export default async function AdminContentPage({ searchParams }: AdminContentPag
           <div className="stack">
             {resources.length === 0 ? <p>No resources yet.</p> : null}
             {resources.map((resource) => (
-              <article key={resource.id} className="card stack">
+              <details key={resource.id} className="card stack resource-editor">
+                <summary className="resource-editor-summary">
+                  <div className="resource-editor-summary-meta">
+                    <p className="resource-editor-summary-title">{resource.title}</p>
+                    <p className="resource-editor-summary-line">
+                      {categoryLabel[resource.category]} - {resource.url}
+                    </p>
+                  </div>
+                  <span className="button-outline resource-edit-toggle" aria-hidden="true">
+                    Edit
+                  </span>
+                </summary>
+
                 <form className="stack" action={updateResourceAction}>
                   <input type="hidden" name="id" value={resource.id} />
                   <label>
@@ -86,13 +103,14 @@ export default async function AdminContentPage({ searchParams }: AdminContentPag
                     Save Changes
                   </button>
                 </form>
+
                 <form action={deleteResourceAction}>
                   <input type="hidden" name="id" value={resource.id} />
                   <button className="button-outline" type="submit">
                     Delete Resource
                   </button>
                 </form>
-              </article>
+              </details>
             ))}
           </div>
         </article>
