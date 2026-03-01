@@ -1010,6 +1010,19 @@ td {
     grid-template-columns: 1fr;
   }
 
+  .home-hero-logo,
+  .studies-hero-logo {
+    width: min(100%, 280px);
+    margin-inline: auto;
+  }
+
+  .home-hero-logo img,
+  .studies-hero-logo img {
+    width: 100%;
+    height: auto;
+    max-height: 280px;
+  }
+
   .home-main-row {
     grid-template-columns: 1fr;
   }
