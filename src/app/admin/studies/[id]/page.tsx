@@ -32,22 +32,10 @@ export default async function AdminEditStudyPage({ params }: AdminEditStudyPageP
       <section className="card">
         <form className="stack" action={updateStudyAction}>
           <input type="hidden" name="id" value={study.id} />
-          <div className="study-title-date-row">
-            <label className="study-title-inline">
-              Title
-              <input type="text" name="title" required maxLength={200} defaultValue={study.title} />
-            </label>
-
-            <label className="study-date-inline">
-              Study Date
-              <input
-                type="date"
-                name="studyDate"
-                required
-                defaultValue={formatDateInputValue(study.studyDate)}
-              />
-            </label>
-          </div>
+          <label>
+            Title
+            <input type="text" name="title" required maxLength={200} defaultValue={study.title} />
+          </label>
 
           <label>
             Summary
@@ -58,6 +46,16 @@ export default async function AdminEditStudyPage({ params }: AdminEditStudyPageP
               minLength={8}
               maxLength={320}
               defaultValue={study.summary}
+            />
+          </label>
+
+          <label>
+            Study Date
+            <input
+              type="date"
+              name="studyDate"
+              required
+              defaultValue={formatDateInputValue(study.studyDate)}
             />
           </label>
 

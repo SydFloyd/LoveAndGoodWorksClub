@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useRef } from "react";
 import type { SiteAccessRole } from "@/lib/auth";
 
 const baseNavItems = [
@@ -34,8 +35,15 @@ export function AppChrome({
   accessRole?: SiteAccessRole | null;
 }) {
   const pathname = usePathname();
+  const mobileMenuRef = useRef<HTMLDetailsElement>(null);
   const hideChrome = pathname.startsWith("/gate");
   const navItems = accessRole === "admin" ? [...baseNavItems, adminNavItem] : baseNavItems;
+
+  useEffect(() => {
+    if (mobileMenuRef.current) {
+      mobileMenuRef.current.open = false;
+    }
+  }, [pathname]);
 
   if (hideChrome) {
     return <>{children}</>;
@@ -57,7 +65,7 @@ export function AppChrome({
           </nav>
 
           <div className="header-right">
-            <details className="site-nav-mobile">
+            <details className="site-nav-mobile" ref={mobileMenuRef}>
               <summary aria-label="Open navigation menu">
                 <span className="hamburger-icon" aria-hidden="true">
                   <span />

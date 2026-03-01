@@ -37,21 +37,19 @@ export default async function AdminStudiesPage({ searchParams }: AdminStudiesPag
 
       <section className="card">
         <form className="stack" action={createStudyAction}>
-          <div className="study-title-date-row">
-            <label className="study-title-inline">
-              Title
-              <input type="text" name="title" required maxLength={200} />
-            </label>
-
-            <label className="study-date-inline">
-              Study Date
-              <input type="date" name="studyDate" required defaultValue={defaultStudyDate} />
-            </label>
-          </div>
+          <label>
+            Title
+            <input type="text" name="title" required maxLength={200} />
+          </label>
 
           <label>
             Summary
             <input type="text" name="summary" required minLength={8} maxLength={320} />
+          </label>
+
+          <label>
+            Study Date
+            <input type="date" name="studyDate" required defaultValue={defaultStudyDate} />
           </label>
 
           <label>
