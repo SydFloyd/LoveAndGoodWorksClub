@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { listStudies } from "@/lib/data";
 import { formatDate } from "@/lib/format";
@@ -24,22 +25,30 @@ export default async function StudiesPage({ searchParams }: StudiesPageProps) {
 
   return (
     <>
-      <section className="hero stack">
-        <h2>Bible Study Archive</h2>
-        <form className="inline-search" method="get">
-          <label>
-            Search
-            <input
-              type="search"
-              name="q"
-              defaultValue={query}
-              placeholder="Grace, John 15, discipleship..."
-            />
-          </label>
-          <button className="button-primary" type="submit">
-            Search
-          </button>
-        </form>
+      <section className="studies-hero-row">
+        <div className="studies-hero-logo">
+          <Image src="/lgwc-logo-2.png" alt="Love & Good Works" width={1200} height={1200} />
+        </div>
+        <article className="hero stack">
+          <h2>Bible Study Archive</h2>
+          <p className="studies-subtitle">
+            Search and paruse notes from Kurt&apos;s study outlines curated by our lovely Hannah.
+          </p>
+          <form className="inline-search" method="get">
+            <label>
+              Search
+              <input
+                type="search"
+                name="q"
+                defaultValue={query}
+                placeholder="Grace, John 15, discipleship..."
+              />
+            </label>
+            <button className="button-primary" type="submit">
+              Search
+            </button>
+          </form>
+        </article>
       </section>
 
       <section className="stack">

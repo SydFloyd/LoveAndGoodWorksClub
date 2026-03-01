@@ -156,23 +156,50 @@ textarea {
   object-fit: contain;
 }
 
-.home-logo-secondary {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.home-main-row {
+  display: grid;
+  gap: 1rem;
 }
 
-.home-logo-secondary img {
-  width: min(100%, 760px);
+.next-meeting-card {
+  gap: 0.4rem;
+}
+
+.next-meeting-card p {
+  margin: 0;
+  line-height: 1.3;
+}
+
+.next-meeting-card h3 {
+  margin: 0.1rem 0;
+}
+
+.next-meeting-card .button-outline {
+  margin-top: 0.25rem;
+}
+
+.studies-hero-row {
+  display: grid;
+  grid-template-columns: minmax(160px, 220px) minmax(0, 1fr);
+  align-items: stretch;
+  gap: 1rem;
+}
+
+.studies-hero-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.studies-hero-logo img {
+  width: 100%;
   height: auto;
   object-fit: contain;
 }
 
-.home-main-row {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: minmax(0, 0.38fr) minmax(0, 0.62fr);
-  align-items: start;
+.studies-subtitle {
+  margin: 0;
+  color: var(--ink-soft);
 }
 
 .resource-line {
@@ -532,6 +559,10 @@ td {
   }
 
   .home-main-row {
+    grid-template-columns: 1fr;
+  }
+
+  .studies-hero-row {
     grid-template-columns: 1fr;
   }
 }

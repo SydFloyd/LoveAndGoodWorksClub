@@ -36,7 +36,7 @@ export default async function HomePage() {
 
       <section className="home-main-row">
         <div className="stack">
-          <article className="card stack">
+          <article className="card stack next-meeting-card">
             <p className="eyebrow">Next Meeting</p>
             {nextMeeting ? (
               <>
@@ -55,8 +55,8 @@ export default async function HomePage() {
           </article>
 
           <article className="card stack">
-            <p className="eyebrow">Current Studies</p>
-            <p>Browse archived notes from our Bible studies with verse quick-lookup.</p>
+            <p className="eyebrow">Latest Studies</p>
+            <p>Browse archived notes from Kurt&apos;s Bible studies with verse quick-lookup.</p>
             <Link href="/studies" className="button-primary">
               Explore Studies
             </Link>
@@ -65,18 +65,14 @@ export default async function HomePage() {
           <article className="card stack">
             <p className="eyebrow">Prayer Requests</p>
             <p>
-              Submit private prayer needs to the admin team. Requests are reviewed privately and included
-              in weekly prayer follow-up.
+              Submit private prayer needs.  Requests are reviewed privately to be included
+              in weekly prayer mailing.
             </p>
             <Link href="/prayer" className="button-primary">
               Submit Prayer Request
             </Link>
           </article>
         </div>
-
-        <article className="home-logo-secondary">
-          <Image src="/lgwc-logo-2.png" alt="Love & Good Works" width={1200} height={1200} />
-        </article>
       </section>
     </>
   );
