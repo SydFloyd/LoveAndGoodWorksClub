@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createStudyAction, restoreStudyAction, softDeleteStudyAction } from "@/app/admin/actions";
+import { AdminStudyEditor } from "@/components/AdminStudyEditor";
 import { formatDate, formatDateInputValue } from "@/lib/format";
 import { listStudies, listTrashedStudies } from "@/lib/data";
 
@@ -35,40 +36,17 @@ export default async function AdminStudiesPage({ searchParams }: AdminStudiesPag
       {params.restored ? <p className="status success">Study restored from trash.</p> : null}
       {params.error ? <p className="status error">Could not create study. Check form values.</p> : null}
 
-      <section className="card">
-        <form className="stack" action={createStudyAction}>
-          <label>
-            Title
-            <input type="text" name="title" required maxLength={200} />
-          </label>
-
-          <label>
-            Summary
-            <input type="text" name="summary" required minLength={8} maxLength={320} />
-          </label>
-
-          <label>
-            Study Date
-            <input type="date" name="studyDate" required defaultValue={defaultStudyDate} />
-          </label>
-
-          <label>
-            Body (Markdown)
-            <textarea
-              name="bodyMd"
-              required
-              minLength={10}
-              maxLength={50000}
-              rows={14}
-              placeholder="# Study Title&#10;&#10;- Point 1&#10;- Point 2&#10;&#10;Read John 3:16"
-            />
-          </label>
-
-          <button className="button-primary" type="submit">
-            Save Study
-          </button>
-        </form>
-      </section>
+      <AdminStudyEditor
+        action={createStudyAction}
+        submitLabel="Save Study"
+        bodyRows={14}
+        defaults={{
+          title: "",
+          summary: "",
+          studyDate: defaultStudyDate,
+          bodyMd: "",
+        }}
+      />
 
       <section className="card stack">
         <h3>Existing Studies</h3>

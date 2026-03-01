@@ -68,8 +68,8 @@ const BIBLE_BOOKS = [
 ];
 
 const bookPattern = `(?:${BIBLE_BOOKS.join("|")})`;
-const verseRegex = new RegExp(
-  `\\b${bookPattern}\\s\\d{1,3}:\\d{1,3}(?:-\\d{1,3})?\\b`,
+const passageRegex = new RegExp(
+  `\\b${bookPattern}\\s\\d{1,3}(?::\\d{1,3}(?:-\\d{1,3})?)?\\b`,
   "gi",
 );
 
@@ -80,7 +80,7 @@ export function linkVerseReferences(markdown: string) {
       if (segment.startsWith("```")) {
         return segment;
       }
-      return segment.replace(verseRegex, (match) => {
+      return segment.replace(passageRegex, (match) => {
         const trimmed = match.trim();
         return `[${trimmed}](verse:${encodeURIComponent(trimmed)})`;
       });

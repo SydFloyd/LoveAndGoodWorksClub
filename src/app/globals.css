@@ -561,6 +561,7 @@ textarea {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 320px;
   gap: 1rem;
+  align-items: start;
 }
 
 .study-body {
@@ -576,6 +577,23 @@ textarea {
 .study-body h3,
 .study-body h4 {
   margin-top: 0.8rem;
+}
+
+.study-body h1 {
+  margin-top: 0.8rem;
+  font-size: clamp(1.8rem, 1.6rem + 1.2vw, 2.5rem);
+}
+
+.study-body h2 {
+  font-size: clamp(1.5rem, 1.35rem + 0.9vw, 2rem);
+}
+
+.study-body h3 {
+  font-size: clamp(1.3rem, 1.2rem + 0.5vw, 1.65rem);
+}
+
+.study-body h4 {
+  font-size: clamp(1.15rem, 1.08rem + 0.35vw, 1.35rem);
 }
 
 .study-body p,
@@ -615,10 +633,32 @@ textarea {
   top: 90px;
   display: grid;
   gap: 0.8rem;
+  max-height: calc(100vh - 120px);
+  overflow: auto;
 }
 
 .verse-reference {
   font-weight: 700;
+}
+
+.verse-passages {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.verse-entry {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.verse-line {
+  margin: 0;
+  line-height: 1.55;
+}
+
+.verse-number {
+  font-weight: 700;
+  margin-right: 0.35rem;
 }
 
 .verse-translation {
@@ -626,11 +666,27 @@ textarea {
   font-size: 0.9rem;
 }
 
+.verse-lookup-form {
+  display: grid;
+  gap: 0.55rem;
+}
+
 .study-updated-note {
   margin: 0;
   text-align: right;
   color: var(--ink-soft);
   font-weight: 600;
+}
+
+.markdown-preview {
+  border-top: 1px solid var(--line);
+  padding-top: 0.75rem;
+}
+
+.markdown-preview-empty {
+  margin: 0;
+  color: var(--ink-soft);
+  font-style: italic;
 }
 
 .table-wrap {

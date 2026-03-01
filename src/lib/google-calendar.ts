@@ -7,6 +7,10 @@ export type GoogleCalendarEvent = {
   endAt: Date;
 };
 
+function normalizeEventTitle(value: string) {
+  return value.trim().replace(/\s+/g, " ").toLowerCase();
+}
+
 type GoogleCalendarApiEvent = {
   id: string;
   summary?: string;
@@ -115,4 +119,10 @@ export async function getUpcomingGoogleCalendarEvents(limit = 20): Promise<Googl
 export async function getNextGoogleCalendarEvent() {
   const events = await getUpcomingGoogleCalendarEvents(1);
   return events[0] ?? null;
+}
+
+export async function getNextGoogleCalendarEventByTitle(title: string) {
+  const expected = normalizeEventTitle(title);
+  const events = await getUpcomingGoogleCalendarEvents(100);
+  return events.find((event) => normalizeEventTitle(event.title) === expected) ?? null;
 }

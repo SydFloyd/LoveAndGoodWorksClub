@@ -1,13 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
-import { formatDate, formatDateTime } from "@/lib/format";
+import { formatDate, formatDateTimeInTimeZone } from "@/lib/format";
 import { getSiteSettings, listStudies } from "@/lib/data";
-import { getNextGoogleCalendarEvent } from "@/lib/google-calendar";
+import { getNextGoogleCalendarEventByTitle } from "@/lib/google-calendar";
 
 export default async function HomePage() {
+  const meetingTimeZone = "America/Chicago";
+
   const [settings, nextCalendarEvent, studies] = await Promise.all([
     getSiteSettings(),
-    getNextGoogleCalendarEvent(),
+    getNextGoogleCalendarEventByTitle("Fellowship & Study"),
     listStudies({}),
   ]);
   const latestStudies = studies.slice(0, 3);
@@ -47,7 +49,7 @@ export default async function HomePage() {
               <>
                 <h3>{nextMeeting.title}</h3>
                 <p>
-                  <strong>{formatDateTime(nextMeeting.time)}</strong>
+                  <strong>{formatDateTimeInTimeZone(nextMeeting.time, meetingTimeZone)}</strong>
                 </p>
                 <p>{nextMeeting.location}</p>
               </>

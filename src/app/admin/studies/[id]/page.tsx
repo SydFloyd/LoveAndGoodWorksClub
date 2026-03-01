@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { updateStudyAction } from "@/app/admin/actions";
+import { AdminStudyEditor } from "@/components/AdminStudyEditor";
 import { getStudyById } from "@/lib/data";
 import { formatDateInputValue } from "@/lib/format";
 
@@ -29,53 +30,18 @@ export default async function AdminEditStudyPage({ params }: AdminEditStudyPageP
         <h2>Edit Study</h2>
       </section>
 
-      <section className="card">
-        <form className="stack" action={updateStudyAction}>
-          <input type="hidden" name="id" value={study.id} />
-          <label>
-            Title
-            <input type="text" name="title" required maxLength={200} defaultValue={study.title} />
-          </label>
-
-          <label>
-            Summary
-            <input
-              type="text"
-              name="summary"
-              required
-              minLength={8}
-              maxLength={320}
-              defaultValue={study.summary}
-            />
-          </label>
-
-          <label>
-            Study Date
-            <input
-              type="date"
-              name="studyDate"
-              required
-              defaultValue={formatDateInputValue(study.studyDate)}
-            />
-          </label>
-
-          <label>
-            Body (Markdown)
-            <textarea
-              name="bodyMd"
-              required
-              minLength={10}
-              maxLength={50000}
-              rows={16}
-              defaultValue={study.bodyMd}
-            />
-          </label>
-
-          <button className="button-primary" type="submit">
-            Save Changes
-          </button>
-        </form>
-      </section>
+      <AdminStudyEditor
+        action={updateStudyAction}
+        submitLabel="Save Changes"
+        bodyRows={16}
+        defaults={{
+          id: study.id,
+          title: study.title,
+          summary: study.summary,
+          studyDate: formatDateInputValue(study.studyDate),
+          bodyMd: study.bodyMd,
+        }}
+      />
     </>
   );
 }
