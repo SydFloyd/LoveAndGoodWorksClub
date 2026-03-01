@@ -7,8 +7,8 @@ export default function PrayerPage() {
         <p className="eyebrow">Prayer</p>
         <h2>Private Prayer Request Submission</h2>
         <p>
-          Requests submitted here are private and one-way. They are reviewed by admin and included in
-          the prayer list workflow.
+          Requests submitted here are private and one-way. They are reviewed by the prayer captain and 
+          included in the prayer list mailings.
         </p>
       </section>
 

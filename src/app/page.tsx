@@ -82,8 +82,7 @@ export default async function HomePage() {
           <article className="card stack">
             <p className="eyebrow">Prayer Requests</p>
             <p>
-              Submit private prayer needs.  Requests are reviewed privately to be included
-              in weekly prayer mailing.
+              Requests are reviewed privately to be included in weekly prayer mailing.
             </p>
             <Link href="/prayer" className="button-primary">
               Submit Prayer Request
