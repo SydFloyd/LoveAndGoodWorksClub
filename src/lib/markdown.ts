@@ -9,7 +9,7 @@ marked.setOptions({
 
 function transformVerseLinks(html: string) {
   return html.replace(
-    /<a href="verse:([^"]+)">([^<]+)<\/a>/g,
+    /<a href="verse:([^"]+)">([\s\S]*?)<\/a>/g,
     '<button class="verse-link" data-verse="$1" type="button">$2</button>',
   );
 }

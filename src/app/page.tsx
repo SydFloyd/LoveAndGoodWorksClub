@@ -61,8 +61,8 @@ export default async function HomePage() {
           </article>
 
           <article className="card stack">
-            <p className="eyebrow">Kurt&apos;s Latest Studies</p>
-            <p>**Study Archival In Progress -- many months of study notes to be added**</p>
+            <p className="eyebrow">Latest Studies</p>
+            <p>**Study Archive In Progress -- many months of study notes to be added**</p>
             <div className="latest-studies-list">
               {latestStudies.length === 0 ? <p>No studies posted yet.</p> : null}
               {latestStudies.map((study) => (

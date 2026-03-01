@@ -637,6 +637,10 @@ textarea {
   font-weight: 700;
 }
 
+.study-body del .verse-link {
+  text-decoration-line: underline line-through;
+}
+
 .verse-panel {
   border: 1px solid var(--line);
   border-radius: var(--radius-md);

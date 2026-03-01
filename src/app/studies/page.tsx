@@ -23,7 +23,7 @@ export default async function StudiesPage({ searchParams }: StudiesPageProps) {
         <article className="hero stack">
           <h2>Bible Study Archive</h2>
           <p className="studies-subtitle">
-            Search and paruse notes from Kurt&apos;s study outlines curated by our lovely Hannah.
+            Search and review notes from Kurt&apos;s study outlines.
           </p>
           <form className="inline-search" method="get">
             <label>
