@@ -33,6 +33,7 @@ export function renderStudyMarkdown(markdown: string) {
       "li",
       "strong",
       "em",
+      "del",
       "u",
       "blockquote",
       "code",

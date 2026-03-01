@@ -26,7 +26,7 @@ export default async function AdminStudiesPage({ searchParams }: AdminStudiesPag
         <h2>Create Study Notes</h2>
         <p>
           This editor stores title, summary, study date, and markdown body. Markdown supports bold, italics,
-          headers, and bullets.
+          strikethrough, headers, and bullets.
         </p>
       </section>
 

@@ -42,6 +42,7 @@ function renderPreview(markdown: string) {
       "li",
       "strong",
       "em",
+      "del",
       "u",
       "blockquote",
       "code",
