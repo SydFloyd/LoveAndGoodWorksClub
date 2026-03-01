@@ -149,31 +149,6 @@ export function VerseLookupLayout({
 
       <aside className="verse-panel" aria-live="polite">
         <h3>Verse Lookup</h3>
-        <form className="verse-lookup-form" onSubmit={onLookupSubmit}>
-          <label>
-            Passage
-            <input
-              type="text"
-              value={referenceInput}
-              onChange={(event) => setReferenceInput(event.target.value)}
-              placeholder="John 3:16 or John 3"
-            />
-          </label>
-          <label>
-            Translation
-            <select
-              value={translation}
-              onChange={(event) => setTranslation(event.target.value as TranslationCode)}
-            >
-              <option value="web">WEB</option>
-              <option value="kjv">KJV</option>
-              <option value="asv">ASV</option>
-            </select>
-          </label>
-          <button className="button-outline" type="submit">
-            Lookup
-          </button>
-        </form>
         {verse.status === "idle" ? <p>Click a verse reference to view the passage here.</p> : null}
         {verse.status === "loading" ? <p>Loading {verse.reference}...</p> : null}
         {verse.status === "error" ? <p>Could not load {verse.reference}. Try another reference.</p> : null}
@@ -202,6 +177,35 @@ export function VerseLookupLayout({
             <p className="verse-translation">{verse.translation}</p>
           </div>
         ) : null}
+
+        <section className="verse-search-box">
+          <h4>Find Another Verse</h4>
+          <form className="verse-lookup-form" onSubmit={onLookupSubmit}>
+            <label>
+              Passage
+              <input
+                type="text"
+                value={referenceInput}
+                onChange={(event) => setReferenceInput(event.target.value)}
+                placeholder="John 3:16 or John 3"
+              />
+            </label>
+            <label>
+              Translation
+              <select
+                value={translation}
+                onChange={(event) => setTranslation(event.target.value as TranslationCode)}
+              >
+                <option value="web">WEB</option>
+                <option value="kjv">KJV</option>
+                <option value="asv">ASV</option>
+              </select>
+            </label>
+            <button className="button-outline" type="submit">
+              Lookup
+            </button>
+          </form>
+        </section>
       </aside>
     </div>
   );

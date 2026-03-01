@@ -35,6 +35,13 @@ type StudyMemoryVerseRow = {
   memory_verses: string | null;
 };
 
+type AdjacentStudyRow = {
+  prev_slug: string | null;
+  prev_title: string | null;
+  next_slug: string | null;
+  next_title: string | null;
+};
+
 type PrayerRequestRow = {
   id: number | string;
   requester_name: string | null;
@@ -251,6 +258,38 @@ export async function getStudyBySlug(slug: string) {
   `;
 
   return row ? mapStudy(row) : null;
+}
+
+export async function getAdjacentStudiesBySlug(slug: string) {
+  noStore();
+  const [row] = await sql<AdjacentStudyRow[]>`
+    with ordered as (
+      select
+        s.slug,
+        s.title,
+        lag(s.slug) over (order by s.study_date desc, s.created_at desc) as prev_slug,
+        lag(s.title) over (order by s.study_date desc, s.created_at desc) as prev_title,
+        lead(s.slug) over (order by s.study_date desc, s.created_at desc) as next_slug,
+        lead(s.title) over (order by s.study_date desc, s.created_at desc) as next_title
+      from studies s
+      where s.deleted_at is null
+    )
+    select prev_slug, prev_title, next_slug, next_title
+    from ordered
+    where slug = ${slug}
+    limit 1
+  `;
+
+  return {
+    prev:
+      row?.prev_slug && row?.prev_title
+        ? { slug: row.prev_slug, title: row.prev_title }
+        : null,
+    next:
+      row?.next_slug && row?.next_title
+        ? { slug: row.next_slug, title: row.next_title }
+        : null,
+  };
 }
 
 export async function getStudyById(id: number) {

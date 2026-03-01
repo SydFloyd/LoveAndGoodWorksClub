@@ -60,7 +60,7 @@ export default async function HomePage() {
             </Link>
           </article>
 
-          <article className="card stack">
+          <article className="card stack home-panel-tight">
             <p className="eyebrow">Latest Studies</p>
             <p>**Study Archive In Progress -- many months of study notes to be added**</p>
             <div className="latest-studies-list">
@@ -80,7 +80,7 @@ export default async function HomePage() {
             </Link>
           </article>
 
-          <article className="card stack">
+          <article className="card stack home-panel-tight">
             <p className="eyebrow">Prayer Requests</p>
             <p>
               Requests are reviewed privately to be included in weekly prayer mailing.

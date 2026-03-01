@@ -46,18 +46,17 @@ export default async function StudiesPage({ searchParams }: StudiesPageProps) {
       <section className="stack">
         {studies.length === 0 ? <p>No studies found for this query.</p> : null}
         {studies.map((study) => (
-          <article key={study.id} className="card stack study-list-item">
+          <Link
+            key={study.id}
+            className="card stack study-list-item study-item-link"
+            href={`/studies/${study.slug}`}
+          >
             <div className="study-list-header">
-              <h3>
-                <Link href={`/studies/${study.slug}`}>{study.title}</Link>
-              </h3>
+              <h3>{study.title}</h3>
               <span>Study Date: {formatDate(study.studyDate)}</span>
             </div>
             <p>{study.summary}</p>
-            <Link className="button-outline" href={`/studies/${study.slug}`}>
-              Read Study
-            </Link>
-          </article>
+          </Link>
         ))}
       </section>
     </>

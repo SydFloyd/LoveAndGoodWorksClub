@@ -26,7 +26,6 @@ export default async function AdminDashboardPage({ searchParams }: AdminDashboar
   return (
     <>
       <section className="hero stack admin-panel-tight">
-        <p className="eyebrow">Admin</p>
         <h2>Content & Ministry Dashboard</h2>
         <p>Manage studies, welcome message, resources, and prayer request review.</p>
       </section>
